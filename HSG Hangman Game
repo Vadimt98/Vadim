@@ -1,0 +1,150 @@
+import random
+import time
+
+#Method to get a word to guess randomly
+def chooseWord():
+    #List of existing words
+    acceptable_words = [
+        "University",
+        "Stgallen",
+        "Programming",
+        "Kingmariosilic",
+        "Switzerland",
+        "Economics"
+    ]
+    #Set a random seed from the current time to make sure it's always different
+    random.seed(time.time())
+    #We take a word randomly from the list
+    word = random.choice(acceptable_words)
+    #We transform the word to lowercase
+    word = word.lower()
+    #Return the selected word
+    return word
+
+def drawWord(word,correctly_guessed_letters):
+    # The function prints the level and counts the correct letters
+    # Shows the letter that has been guessed, in case it has not been guessed it shows an hyphen down
+
+    #Counter for correctly guessed letters
+    cont = 0
+    #Iterate through each letter of the word and check which ones have been guessed
+    for i in range(0, len(word)):
+        letter = word[i]
+        #If the letter has been guessed, it prints it
+        if letter in correctly_guessed_letters:
+            print(letter, end=" ")
+            cont+=1
+        #If not, it prints a _ character
+        else:
+            print("_", end=" ")
+    #Prints a line break at the end
+    print("")
+    #Returns the number of correctly guessed letters
+    return cont
+
+#Method to draw the hang man according to the remaining lives
+def drawHangman(lives: int):
+    print("*---------*")
+    if lives == 6:
+        print("|         |")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+    elif lives == 5:
+        print("|         |")
+        print("|         O")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+    elif lives == 4:
+        print("|         |")
+        print("|         O")
+        print("|         |")
+        print("|")
+        print("|")
+        print("|")
+    elif lives == 3:
+        print("|         |")
+        print("|         O")
+        print("|         |")
+        print("|        /")
+        print("|")
+        print("|")
+    elif lives == 2:
+        print("|         |")
+        print("|         O")
+        print("|         |")
+        print("|        / \\")
+        print("|")
+        print("|")
+    elif lives == 1:
+        print("|         |")
+        print("|         O")
+        print("|         |\\")
+        print("|        / \\")
+        print("|")
+        print("|")
+    elif lives == 0:
+        print("|         |")
+        print("|         O")
+        print("|        /|\\")
+        print("|        / \\")
+        print("|")
+        print("|")
+    print("*-------*")
+
+
+def readLetter(correctly_letter: list):
+    # Here it reads and validates the letter
+    # Reads the letter to be guessed, validates that the hangman has it and that it is not repeated
+    # Asks for a letter until it has been correctly entered (Only one character) and it is one that has not been guessed yet
+    letter = input("write a letter: ")
+    while len(letter) != 1 or letter in correctly_letter:
+        letter = input("write the correct letter: ")
+    #Returns the letter
+    return letter
+
+#Main method to play the game
+def main():
+    # This function runs the project
+    # If it reaches 0 lives or the word is guessed, it shows a "Game over Message"
+    lives = 6
+    print("-----Welcome to the HSG Hangman Game----")
+    #Gets a new random word to guess
+    correct_word = chooseWord()
+    #Correctly guessed letters
+    correctly_letters = []
+    #Number of correct guessed letters
+    cont = 0
+    #Play until the number of lives reaches 0
+    while lives > 0:
+        #Draw the hangman according to the current number of lives
+        drawHangman(lives)
+        #Get the number of correctly guessed letters
+        cont = drawWord(correct_word,correctly_letters)
+        #If the entire word has been guessed stop the game
+        if cont  == len(correct_word):
+            break
+        #Reads a new letter to guess
+        letter = readLetter(correctly_letters)
+        #If the letter is not correct
+        if not letter in correct_word:
+            #Substract one live and print the remaining lives
+            lives-=1
+            print("You guessed wrong, you got " + str(lives) + " lives left")
+        else:
+            #If the letter is correct, add it to the correctly guessed letters
+            correctly_letters.append(letter)
+    #At the end of the game, if the player still has lives, then he wins
+    if lives > 0:
+        print("Congratulations you won! I hope you will perform well in your exams too.")
+    #If the number of lives is 0, then the player looses
+    else:
+        print("You lost! The word was " + correct_word + ". Now quit the game and finally start studying for your exams!" )
+        
+#Run the main function to play the game
+main()
+
